@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIS 15 DAIANA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        :root {
+            --accent-dusty: #a67c80;
+            --bg-light: #ffffff;
+            --text-dark: #4a4a4a;
+        }
+
+        body {
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 430px;
+            background: var(--bg-light);
+            min-height: 100vh;
+            box-shadow: 0 0 25px rgba(0,0,0,0.3);
+            position: relative;
+            overflow-x: hidden;
+            z-index: 1; /* Asegura contenedor sobre fondo global */
+        }
+
+        /* ANIMACIÓN DE FONDO GLOBAL (Destellos / Luces) */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0; /* Detrás de todo */
+            background: radial-gradient(circle at 20% 30%, rgba(166, 124, 128, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(212, 175, 55, 0.12) 0%, transparent 50%);
+            animation: pulseBg 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseBg {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.1) translate(-10px, 10px); }
+        }
+
+        /* --- PORTADA INICIAL --- */
+        #intro-screen {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px;
+            position: absolute; /* Superpone sobre el contenido principal */
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10;
+            /* Fondo blanco con efecto de destellos */
+            background: #fff url('data:image/svg+xml,%3Csvg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3ClinearGradient id="g1" x1="0" y1="0" x2="1" y2="1"%3E%3Cstop offset="0%" stop-color="rgba(166,124,128,0)"/%3E%3Cstop offset="50%" stop-color="rgba(212,175,55,0.2)"/%3E%3Cstop offset="100%" stop-color="rgba(166,124,128,0)"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="100%" height="100%" fill="url(%23g1)"%3E%3Canimate attributeName="fill-opacity" from="0.2" to="0.8" dur="3s" repeatCount="indefinite"/%3E%3C/rect%3E%3C/svg%3E') center/cover;
+            transition: opacity 0.8s ease; /* Para desaparecer suave */
+        }
+
+        /* Ocultar portada suavemente */
+        #intro-screen.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #intro-screen h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            letter-spacing: 4px;
+            color: #555;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        #intro-screen p {
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            color: #888;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            line-height: 1.6;
+        }
+
+        .btn-ingresar {
+            background: var(--accent-dusty);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            box-shadow: 0 4px 15px rgba(166, 124, 128, 0.4);
+        }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        #main-content {
+            display: none; /* Se activa al ingresar */
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- SECCIÓN HERO CON FOTO DE LA CUMPLEAÑERA --- */
+        .hero {
+            height: 90vh;
+            /* Degradado suave para oscurecer y la foto de fondo */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%), 
+                        url('img/cumpleanera.jpg') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 2px solid var(--accent-dusty);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            letter-spacing: 6px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Sombra para legibilidad */
+        }
+
+        .countdown {
+            display: flex;
+            gap: 20px;
+        }
+
+        .count-item span {
+            font-size: 1.8rem;
+            font-weight: 300;
+            display: block;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .count-item label {
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            color: #eee;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* SECCIONES GENERALES */
+        .section-white {
+            background: #ffffff;
+            color: var(--text-dark);
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        .section-colored {
+            background: var(--accent-dusty);
+            color: #ffffff;
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        /* ANIMACIÓN AL SCROLL */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .icon-box {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .btn-outline {
+            display: inline-block;
+            margin-top: 20px;
+            border: 1px solid var(--text-dark);
+            color: var(--text-dark);
+            padding: 10px 25px;
+            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .hashtag {
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            display: block;
+        }
+
+        /* FORMULARIO RSVP */
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.6);
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        select.form-control option {
+            background: var(--accent-dusty);
+            color: white;
+        }
+
+        .btn-submit {
+            background: white;
+            color: var(--accent-dusty);
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        /* SECCIÓN FINAL */
+        .footer-hero {
+            height: 60vh;
+            /* Fondo final con boliche original u otra imagen de transición */
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop') center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            border-top: 2px solid var(--accent-dusty);
+        }
+
+        .footer-hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            letter-spacing: 6px;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-animation"></div>
+
+<div class="mobile-container">
+    
+    <!-- Pantalla 1: Ingreso ANIMADA -->
+    <div id="intro-screen">
+        <h1>MIS 15 DAIANA</h1>
+        <p>Quiero que seas parte de este momento tan importante para mí</p>
+        <button class="btn-ingresar" onclick="mostrarInvitacion()">INGRESAR</button>
+    </div>
+
+    <!-- Pantalla 2: Contenido Completo -->
+    <div id="main-content">
+        
+        <!-- Portada CON FOTO DE LA CUMPLEAÑERA y Countdown -->
+        <div class="hero">
+            <h1>MIS 15<br>DAIANA</h1>
+            <div class="countdown">
+                <div class="count-item"><span id="days">00</span><label>DÍAS</label></div>
+                <div class="count-item"><span id="hours">00</span><label>HORAS</label></div>
+                <div class="count-item"><span id="minutes">00</span><label>MINUTOS</label></div>
+                <div class="count-item"><span id="seconds">00</span><label>SEGUNDOS</label></div>
+            </div>
+        </div>
+
+        <!-- ¿Cuándo? -->
+        <div class="section-colored reveal">
+            <div class="icon-box">📅</div>
+            <div class="section-title">¿CUÁNDO?</div>
+            <div class="section-subtitle">26 DE SEPTIEMBRE 2026<br>| 21:00 HS |</div>
+        </div>
+
+        <!-- ¿Dónde? -->
+        <div class="section-white reveal">
+            <div class="icon-box">🌐</div>
+            <div class="section-title">¿DÓNDE?</div>
+            <div class="section-subtitle">SALÓN EL CUADRO</div>
+            <a href="https://maps.app.goo.gl/9GxBrUMjdemo6C8k6" target="_blank" class="btn-outline">CÓMO LLEGAR</a>
+        </div>
+
+        <!-- Fotos / Instagram -->
+        <div class="section-white reveal" style="border-top: 1px solid #eee;">
+            <div class="icon-box">📷</div>
+            <div class="section-title">QUIERO VER TUS FOTOS</div>
+            <p style="font-size: 0.8rem; color: #777;">PUEDEN USAR MI # EN TODAS SUS PUBLICACIONES DE INSTAGRAM</p>
+            <span class="hashtag">#DAIFEST</span>
+        </div>
+
+        <!-- Frase de Transición -->
+        <div class="section-colored reveal">
+            <p style="letter-spacing: 2px; line-height: 1.8; font-weight: 300;">
+                TE INVITO A FESTEJAR ESTA NOCHE<br>
+                <strong>¡INOLVIDABLE!</strong>
+            </p>
+        </div>
+
+        <!-- Dress Code -->
+        <div class="section-white reveal">
+            <div class="icon-box">💎</div>
+            <div class="section-title">DRESS CODE</div>
+            <div class="section-subtitle" style="margin-bottom: 10px;">GALA</div>
+            <p style="font-size: 0.75rem; color: #888;">EL COLOR PLATEADO SE RESERVA PARA LA QUINCEAÑERA</p>
+        </div>
+
+        <!-- Formulario RSVP -->
+        <div class="section-colored reveal">
+            <div class="icon-box">✉️</div>
+            <div class="section-title">CONFIRMÁ TU ASISTENCIA</div>
+            <p style="font-size: 0.75rem; margin-bottom: 25px;">ANTES DEL 1 DE SEPTIEMBRE 2026</p>
+
+            <form id="rsvpForm" onsubmit="enviarWhatsApp(event)">
+                <div class="form-group">
+                    <label>Nombre *</label>
+                    <input type="text" id="nombre" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Apellido *</label>
+                    <input type="text" id="apellido" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>¿Confirmas tu asistencia? *</label>
+                    <select id="asistencia" class="form-control" required>
+                        <option value="¡Confirmo!">¡Confirmo!</option>
+                        <option value="No podré asistir">No podré asistir</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>¿Algún requerimiento en la alimentación?</label>
+                    <select id="comida" class="form-control">
+                        <option value="Ninguno">Ninguno</option>
+                        <option value="Vegetariano">Vegetariano</option>
+                        <option value="Vegano">Vegano</option>
+                        <option value="Celiaco">Celíaco</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>¿Qué canción no puede faltar?</label>
+                    <input type="text" id="cancion" class="form-control" placeholder="Nombre del tema / Artista">
+                </div>
+                <button type="submit" class="btn-submit">CONFIRMAR</button>
+            </form>
+        </div>
+
+        <!-- Despedida -->
+        <div class="footer-hero reveal">
+            <h2>TE ESPERO</h2>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function mostrarInvitacion() {
+        const intro = document.getElementById('intro-screen');
+        const main = document.getElementById('main-content');
+        
+        intro.classList.add('hide'); // Inicia animación de ocultar
+        
+        setTimeout(() => {
+            intro.style.display = 'none'; // Oculta del todo después de la animación
+            main.style.display = 'block';
+            revealOnScroll(); // Activar chequeo de scroll inicial
+        }, 800); // Mismo tiempo que la transición CSS
+    }
+
+    // Cuenta Regresiva (Set a 26 Sep 2026)
+    const eventDate = new Date('September 26, 2026 21:00:00').getTime();
+
+    setInterval(function() {
+        const now = new Date().getTime();
+        const difference = eventDate - now;
+
+        if (difference > 0) {
+            document.getElementById('days').innerText = Math.floor(difference / (1000 * 60 * 60 * 24));
+            document.getElementById('hours').innerText = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById('minutes').innerText = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById('seconds').innerText = Math.floor((difference % (1000 * 60)) / 1000);
+        }
+    }, 1000);
+
+    // Animación de aparición al hacer scroll
+    function revealOnScroll() {
+        const reveals = document.querySelectorAll('.reveal');
+        for (let i = 0; i < reveals.length; i++) {
+            const windowHeight = window.innerHeight;
+            const elementTop = reveals[i].getBoundingClientRect().top;
+            const elementVisible = 100;
+
+            if (elementTop < windowHeight - elementVisible) {
+                reveals[i].classList.add('active');
+            }
+        }
+    }
+
+    window.addEventListener('scroll', revealOnScroll);
+
+    // Envío de formulario a WhatsApp
+    function enviarWhatsApp(e) {
+        e.preventDefault();
+        const nombre = document.getElementById('nombre').value;
+        const apellido = document.getElementById('apellido').value;
+        const asistencia = document.getElementById('asistencia').value;
+        const comida = document.getElementById('comida').value;
+        const cancion = document.getElementById('cancion').value;
+
+        // Reemplazar este número por el WhatsApp de Daiana o el organizador
+        const telefono = "5493816434803"; 
+
+        const mensaje = `*Confirmación de Asistencia - 15 Daiana*%0A` +
+                        `👤 *Nombre:* ${nombre} ${apellido}%0A` +
+                        `📌 *Asistencia:* ${asistencia}%0A` +
+                        `🍽️ *Menú:* ${comida}%0A` +
+                        `🎵 *Canción recomendada:* ${cancion}`;
+
+        window.open(`https://wa.me/${telefono}?text=${mensaje}`, '_blank');
+    }
+</script>
+
+</body>
+</html>
