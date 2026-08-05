@@ -309,6 +309,7 @@
 
     <!-- Pantalla 2: Contenido Completo -->
     <div id="main-content">
+        <audio id="bg-music" src="img/musica.mp3.mp3" loop></audio>
         
         <!-- Portada CON FOTO DE LA CUMPLEAÑERA y Countdown -->
         <div class="hero">
@@ -411,6 +412,10 @@
     function mostrarInvitacion() {
         const intro = document.getElementById('intro-screen');
         const main = document.getElementById('main-content');
+        const music = document.getElementById('bg-music');
+
+    // Reproduce la música cuando el usuario hace clic en INGRESAR
+    music.play().catch(e => console.log("Autoplay bloqueado:", e));
         
         intro.classList.add('hide'); // Inicia animación de ocultar
         
@@ -462,7 +467,7 @@
         const cancion = document.getElementById('cancion').value;
 
         // Reemplazar este número por el WhatsApp de Daiana o el organizador
-        const telefono = ""; 
+        const telefono = "5493816466250"; 
 
         const mensaje = `*Confirmación de Asistencia - 15 Daiana*%0A` +
                         `👤 *Nombre:* ${nombre} ${apellido}%0A` +
